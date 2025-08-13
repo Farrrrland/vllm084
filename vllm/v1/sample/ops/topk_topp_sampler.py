@@ -176,6 +176,12 @@ def apply_top_k_top_p(
 
     The logits tensor may be updated in-place.
     """
+
+    # BUG: import flashinfer's sampler API to check if sampling optimization is set
+    from flashinfer.sampling import top_k_top_p_sampling_from_logits
+
+    flashinfer_logits = top_k_top_p_sampling_from_logits(logits, k, p)
+
     if p is None:
         if k is None:
             return logits
@@ -204,6 +210,8 @@ def apply_top_k_top_p(
 
     # Re-sort the probabilities.
     logits = logits_sort.scatter(dim=-1, index=logits_idx, src=logits_sort)
+
+    import pdb; pdb.set_trace()
     return logits
 
 
