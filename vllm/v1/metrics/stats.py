@@ -114,6 +114,9 @@ class IterationStats:
         req_stats.num_generation_tokens += num_new_generation_tokens
 
         # Process request-level engine core events
+
+        # if output.events is not None:
+        #     print(f"[DEBUG] WHEN UPDATE FROM EVENTS: {[_event.type for _event in output.events]}")
         if output.events is not None:
             self.update_from_events(output.request_id, output.events,
                                     is_prefilling, req_stats, lora_stats)

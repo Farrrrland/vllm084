@@ -62,6 +62,7 @@ class LLMEngine:
         self.cache_config = vllm_config.cache_config
 
         self.iteration_stats = IterationStats()
+        self.previous_waiting_num = 0
 
         # important: init dp group before init the engine_core
         # In the decoupled engine case this is handled in EngineCoreProc.

@@ -425,6 +425,8 @@ class Scheduler(SchedulerInterface):
                 resumed_from_preemption=False,
             ) for req in scheduled_running_reqs
         ]
+        def _rid(r):
+            return getattr(r, "request_id", getattr(r, "group_id", None))
         scheduler_output = SchedulerOutput(
             scheduled_new_reqs=new_reqs_data,
             scheduled_cached_reqs=resumed_reqs_data + running_reqs_data,
@@ -441,6 +443,9 @@ class Scheduler(SchedulerInterface):
             free_encoder_input_ids=self.encoder_cache_manager.get_freed_ids(),
             structured_output_request_ids=structured_output_request_ids,
             grammar_bitmask=grammar_bitmask,
+            # waiting_requests=[_rid(r) for r in list(self.waiting)],
+            # running_requests=[_rid(r) for r in list(self.running)],
+            # finished_requests=self.finished_req_ids
         )
 
         # Advance the number of computed tokens for the request AFTER
@@ -456,6 +461,7 @@ class Scheduler(SchedulerInterface):
             self.requests[req_id].num_computed_tokens += num_scheduled_token
 
         self.finished_req_ids = set()
+        # [SCHEDULER_METRIC_GET] 这里要改类，直接加attribute
         return scheduler_output
 
     def _make_cached_request_data(
@@ -681,6 +687,7 @@ class Scheduler(SchedulerInterface):
                 new_running.append(request)
 
         self.running = new_running
+        # [SCHEDULER_METRIC_GET] 这里有一个SchedulerStats
         engine_core_outputs = EngineCoreOutputs(
             outputs=outputs,
             scheduler_stats=self.make_stats(spec_decoding_stats),

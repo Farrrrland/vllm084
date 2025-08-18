@@ -203,8 +203,10 @@ class EngineCore:
                 outputs=[],
                 scheduler_stats=self.scheduler.make_stats(),
             )
+        # [SCHEDULER_METRIC_GET] 这里把scheduler的那几个信息要的都搞进来返回
         scheduler_output = self.scheduler.schedule()
         output = self.model_executor.execute_model(scheduler_output)
+        # [SCHEDULER_METRIC_GET] 这里有 SchedulerStats
         engine_core_outputs = self.scheduler.update_from_output(
             scheduler_output, output)  # type: ignore
 

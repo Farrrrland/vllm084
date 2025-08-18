@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING, Optional, List
 
 if TYPE_CHECKING:
     import numpy as np
@@ -121,3 +121,8 @@ class SchedulerOutput:
     structured_output_request_ids: dict[str, int]
     # the bitmask for the whole batch
     grammar_bitmask: Optional[npt.NDArray[np.int32]]
+
+    # # [SCHEDULER_METRIC_GET] 这里可选的几个attribute加上
+    # waiting_requests: Optional[List[str]]
+    # running_requests: Optional[List[str]]
+    # finished_requests: Optional[List[str]]
