@@ -96,8 +96,8 @@ class RequestState:
         self.is_prefilling = True
         self.queue = queue
 
-        self.stats = RequestStateStats(
-            arrival_time=arrival_time) if log_stats else None
+        self.stats = RequestStateStats(arrival_time=arrival_time) if log_stats else None
+        
 
     @classmethod
     def from_new_request(
@@ -183,6 +183,7 @@ class RequestState:
             prompt_logprobs=prompt_logprobs,
             outputs=outputs,
             finished=finished,
+            metrics=self.stats if finished else None 
         )
 
     def _new_completion_output(

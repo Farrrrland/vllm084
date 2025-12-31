@@ -61,6 +61,20 @@ class RequestStateStats:
     first_token_ts: float = 0.0
     last_token_ts: float = 0.0
 
+    def calculate_metrics(self):
+        ttft = 0.0
+        tpot = 0.0
+        if self.first_token_ts > 0 and self.scheduled_ts > 0:
+            ttft = self.first_token_ts - self.scheduled_ts
+        
+        if self.num_generation_tokens > 1:
+            tpot = (self.last_token_ts - self.first_token_ts) / (self.num_generation_tokens - 1)
+            
+        return {
+            "ttft": ttft,
+            "tpot": tpot,
+            "it": self.last_token_ts - self.scheduled_ts
+        }
 
 @dataclass
 class FinishedRequestStats:

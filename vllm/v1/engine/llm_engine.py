@@ -56,6 +56,8 @@ class LLMEngine:
                 "This should not happen. As a workaround, try using "
                 "LLMEngine.from_vllm_config(...) or explicitly set "
                 "VLLM_USE_V1=0 or 1 and report this issue on Github.")
+        log_stats = True
+
 
         self.vllm_config = vllm_config
         self.model_config = vllm_config.model_config
@@ -227,7 +229,10 @@ class LLMEngine:
 
         # 2) Process EngineCoreOutputs.
         processed_outputs = self.output_processor.process_outputs(
-            outputs.outputs)
+            outputs.outputs,
+            engine_core_timestamp=outputs.timestamp, # 必须传，用于计算 TPOT
+            iteration_stats=self.iteration_stats
+        )
 
         # 3) Abort any reqs that finished due to stop strings.
         self.engine_core.abort_requests(processed_outputs.reqs_to_abort)

@@ -14,6 +14,7 @@ from vllm.multimodal.inputs import MultiModalPlaceholderDict
 from vllm.sampling_params import RequestOutputKind
 from vllm.sequence import (PromptLogprobs, RequestMetrics, SampleLogprobs,
                            SequenceGroup, SequenceGroupBase, SequenceStatus)
+from vllm.v1.metrics.stats import RequestStateStats
 
 
 @dataclass
@@ -113,7 +114,7 @@ class RequestOutput:
         prompt_logprobs: Optional[PromptLogprobs],
         outputs: list[CompletionOutput],
         finished: bool,
-        metrics: Optional[RequestMetrics] = None,
+        metrics: RequestMetrics | RequestStateStats | None = None,
         lora_request: Optional[LoRARequest] = None,
         encoder_prompt: Optional[str] = None,
         encoder_prompt_token_ids: Optional[list[int]] = None,
